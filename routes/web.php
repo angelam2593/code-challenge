@@ -11,5 +11,8 @@
 |
 */
 
-Route::get('/', "SearchController@index");
+Route::get('/', "SearchController@index")->name('home');
 Route::post('/search', "SearchController@search");
+Route::get('search_artist/{id}', 'SearchController@searchArtist')->name('search_artist');
+Route::get('search_album/{id}', 'SearchController@searchAlbum')->name('search_album');
+Route::get('search_track/{id}', 'SearchController@searchTrack')->name('search_track');
