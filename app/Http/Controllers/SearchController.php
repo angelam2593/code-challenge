@@ -50,50 +50,35 @@ class SearchController extends Controller
 
         $payload = json_decode($response->getBody()->getContents());
         
-        $albums = collect(); 
-        $artists = collect();
-        $tracks = collect();
+        $query_data = [];
+        foreach($payload as $key => $value)
+        {   
+            $array_per_type = [];
+            foreach($value->items as $value_specific)
+            {
+                $item_data = [];
+                $item_data['id'] = $value_specific->id;
+                $item_data['name'] = $value_specific->name;
+                $item_data['image'] = asset('img/noimage.jpg'); // set default image
+                
+                switch ($key) {  // change default image
+                    case 'tracks':
+                        if(end($value_specific->album->images)->url != null)
+                            $item_data['image'] = end($value_specific->album->images)->url;
+                        break;
+                    default:
+                        if($value_specific->images != null)
+                            $item_data['image'] = end($value_specific->images)->url;
+                        break;
+                }   
 
-        foreach($payload->albums->items as $item)
-        {
-            $item_data = [];
-            $item_data['id'] = $item->id;
-            $item_data['name'] = $item->name;
-            if($item->images != null)
-                $item_data['image'] = end($item->images)->url;
-            else
-                $item_data['image'] = null;
+                array_push($array_per_type, $item_data);
+            }
 
-            $albums->push($item_data);
+            $query_data[$key] = $array_per_type;
         }
 
-        foreach($payload->artists->items as $item)
-        {
-            $item_data = [];
-            $item_data['id'] = $item->id;
-            $item_data['name'] = $item->name; 
-            if($item->images != null)
-                $item_data['image'] = end($item->images)->url;
-            else
-                $item_data['image'] = null;
-
-            $artists->push($item_data);
-        }
-
-        foreach($payload->tracks->items as $item)
-        {
-            $item_data = [];
-            $item_data['id'] = $item->id;
-            $item_data['name'] = $item->name; 
-            if($item->album->images[0]->url != null)
-                $item_data['image'] = end($item->album->images)->url;
-            else
-                $item_data['image'] = null;
-
-            $tracks->push($item_data);
-        }
-
-        return view('search', ['searchTerm' => $query, 'albums' => $albums, 'artists' => $artists, 'tracks' => $tracks]);
+        return view('search', ['searchTerm' => $query, 'query_data' => $query_data]);
     }
 
     public function searchArtist($id)
