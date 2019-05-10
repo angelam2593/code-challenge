@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Code Challenge</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         html, body {
             background-color: #fff;
@@ -34,6 +34,13 @@
     </style>
 </head>
 <body>
+    @if($errors->any())
+        <div class="alert alert-danger text-center">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
 <div class="flex-center full-height">
     <div>
         <label for="search-box"><img alt="logo" src="/img/logo.svg" class="img" /></label>

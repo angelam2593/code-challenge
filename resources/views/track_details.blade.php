@@ -35,7 +35,7 @@
             <h3><b>Track:</b> {{ $data->name }}</h3> 
             <h4><b>Artist:</b> {{ $data->artists[0]->name }}</h4>
             <h4><b>Album:</b> {{ $data->album->name }} [{{ $data->album->release_date }}]</h4>
-            <h4><b>Duration:</b> {{ $data->duration_ms }} ms</h4>
+            <h4><b>Duration:</b> {{ $data->duration_ms['min'] }}:{{ $data->duration_ms['sec'] }}</h4>
             <h4><b>Explicit:</b> 
                 @if($data->explicit)
                     Yes

@@ -35,6 +35,7 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $query = $request->get('query');
+        $this->validate($request, ['query' => 'required']);
 
         $access_token = $this->getAccessToken(); 
 
@@ -131,6 +132,10 @@ class SearchController extends Controller
             'headers' => $headers
         ]);
         $data = json_decode($response->getBody()->getContents());
+
+        $sec = (int)(($data->duration_ms / 1000) % 60);
+        $min = (int)(($data->duration_ms / 1000)  / 60);
+        $data->duration_ms = ['min' => $min, 'sec' => $sec];
 
         return view('track_details', compact('data'));
         
